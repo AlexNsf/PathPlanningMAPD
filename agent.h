@@ -5,11 +5,14 @@
 #include "task.h"
 #include <vector>
 #include <cstdint>
+#include "a_star.h"
+#include "map.h"
 
 class Agent {
 private:
-    Coordinate end_point;
-    std::vector<Coordinate> path;
+    Coordinate start_coordinate;
+    std::vector<Coordinate> path_to_start;
+    std::vector<Coordinate> path_to_finish;
     int64_t start_time;
     bool is_busy;
 
@@ -18,7 +21,7 @@ public:
 
     Agent(Coordinate initial_position);
 
-    void update_path(Task task);
+    bool update_path(const Map& map, const Task& task, Token& token);
 };
 
 #endif //PATHPLANNINGMAPD_AGENT_H
