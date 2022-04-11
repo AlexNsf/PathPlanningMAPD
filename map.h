@@ -45,6 +45,8 @@ public:
     const std::vector<Coordinate>& get_start_locations() const;
 
     const std::vector<Coordinate>& get_finish_locations() const;
+
+    const std::vector<Task>& get_tasks() const;
 };
 
 #endif //PATHPLANNINGMAPD_MAP_H

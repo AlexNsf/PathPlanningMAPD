@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <map>
+        <width>3</width>
+        <height>3</height>
+        <initial_coordinates>2 0</initial_coordinates>
+        <start_coordinates>0 0</start_coordinates>
+        <finish_coordinates>2 2</finish_coordinates>
+        <tasks>0 0 0 0</tasks>
+        <grid>
+            <row>0 1 0</row>
+            <row>0 0 0</row>
+            <row>0 0 0</row>
+        </grid>
+    </map>
+    <algorithm>
+        <objective>avg_distance</objective>
+    </algorithm>
+</root>

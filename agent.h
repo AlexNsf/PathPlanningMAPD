@@ -14,7 +14,8 @@ private:
     std::vector<Coordinate> path_to_start;
     std::vector<Coordinate> path_to_finish;
     int64_t start_time;
-    bool is_busy;
+    int64_t finish_time;
+    int num;
 
 public:
     Agent();
@@ -22,6 +23,8 @@ public:
     Agent(Coordinate initial_position);
 
     bool update_path(const Map& map, const Task& task, Token& token);
+
+    int64_t get_finish_time() const;
 };
 
 #endif //PATHPLANNINGMAPD_AGENT_H

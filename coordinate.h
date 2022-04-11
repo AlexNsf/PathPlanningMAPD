@@ -5,10 +5,14 @@
 
 struct Coordinate {
     int i, j;
+    int prev_i = -1, prev_j = -1;
+    int num = 1;
 
     Coordinate() : i(-1), j(-1) {}
 
     Coordinate(int i_, int j_) : i(i_), j(j_) {}
+
+    Coordinate(int i_, int j_, int prev_i, int prev_j) : i(i_), j(j_), prev_i(prev_i), prev_j(prev_j) {}
 };
 
 inline bool operator==(const Coordinate& c_1, const Coordinate& c_2) {

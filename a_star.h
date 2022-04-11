@@ -35,7 +35,7 @@ public:
 
     AStarResult find_path(const Map& map, const Task& task, Token& token, int64_t start_ts);
 
-    std::vector<Node*> get_neighbours(const Map& map, const Task& task, const Token& token, Node* node);
+    std::vector<Node*> get_neighbours(const Map& map, const Task& task, Token& token, Node* node);
 };
 
 #endif //PATHPLANNINGMAPD_A_STAR_H

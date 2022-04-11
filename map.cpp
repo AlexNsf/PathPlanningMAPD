@@ -25,7 +25,7 @@ bool Map::get_map(const char *FileName)
     std::string value;
     std::stringstream stream;
 
-    bool hasGridMem = false, hasGrid = false, hasHeight = false, hasWidth = false, hasINIT,
+    bool hasGridMem = false, hasGrid = false, hasHeight = false, hasWidth = false, hasINIT = false,
     hasST = false, hasFIN = false, hasTASKS = false;
 
     tinyxml2::XMLDocument doc;
@@ -382,4 +382,8 @@ const std::vector<Coordinate>& Map::get_start_locations() const {
 
 const std::vector<Coordinate>& Map::get_finish_locations() const {
     return finish_locations;
+}
+
+const std::vector<Task>& Map::get_tasks() const {
+    return tasks;
 }

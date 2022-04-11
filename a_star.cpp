@@ -10,7 +10,7 @@ AStar::~AStar() {
     }
 }
 
-std::vector<Node*> AStar::get_neighbours(const Map& map, const Task& task, const Token& token, Node* node) {
+std::vector<Node*> AStar::get_neighbours(const Map& map, const Task& task, Token& token, Node* node) {
     std::vector<Node*> neighbours;
     for (int i = -1; i <= 1; ++i) {
         for (int j = -1; j <= 1; ++j) {
@@ -33,9 +33,21 @@ std::vector<Node*> AStar::get_neighbours(const Map& map, const Task& task, const
                     continue;
                 }
             }
+            if (token.is_any_blocked_at_ts(node->ts_opened)) { // проверяем, что агенты не столкнутся лоб в лоб
+                std::cout<< "DA KAK TAK TP\n";
+                const auto& blocked = token.get_locations_at_ts(node->ts_opened);
+                Coordinate prev_coordinate(node->i, node->j);
+                const auto& prev_ = blocked.find(prev_coordinate);
+                if (prev_ != blocked.end()) {
+                    if (prev_->prev_i == cur_i && prev_->prev_j == cur_j) {
+                        continue;
+                    }
+                }
+            }
             Node* cur_node = new Node(cur_i, cur_j);
             cur_node->g = node->g + sqrt(i * i + j * j);
-            cur_node->H = token.get_precalculated_h(cur_i, cur_j, task.finish.i, task.finish.j);
+            cur_node->H = 0;
+//            cur_node->H = token.get_precalculated_h(cur_i, cur_j, task.finish.i, task.finish.j);
             cur_node->F = cur_node->g + cur_node->H;
             cur_node->prev = node;
             cur_node->ts_opened = node->ts_opened + 1;
@@ -46,9 +58,12 @@ std::vector<Node*> AStar::get_neighbours(const Map& map, const Task& task, const
 }
 
 AStarResult AStar::find_path(const Map& map, const Task& task, Token& token, int64_t start_ts) {
-    Node* start = new Node(task.start.j, task.start.j);
+//    std::cout << task.start.i << ' ' << task.start.j << " NEW TASK\n";
+//    std::cout << task.finish.i << ' ' << task.finish.j << " FIN\n";
+    Node* start = new Node(task.start.i, task.start.j);
     start->g = 0;
-    start->H = token.get_precalculated_h(start->i, start->j, task.finish.i, task.finish.j);
+    start->H = 0;
+//    start->H = token.get_precalculated_h(start->i, start->j, task.finish.i, task.finish.j);
     start->F = start->H;
     start->ts_opened = start_ts;
     CLOSE[{start->i, start->j}] = start;
@@ -56,6 +71,11 @@ AStarResult AStar::find_path(const Map& map, const Task& task, Token& token, int
     to_del = {start};
     Node* goal = nullptr;
     while (true) {
+//        std::cout << "OPEN\n";
+//        for (auto c : OPEN) {
+//            std::cout << c->i << ' ' << c->j << '\n';
+//        }
+//        std::cout << '\n';
         if (OPEN.empty()) {
             break; // провал
         }
@@ -97,8 +117,11 @@ AStarResult AStar::find_path(const Map& map, const Task& task, Token& token, int
             goal = goal->prev;
         }
         res.is_found = true;
-        res.path_len = path.size();
+        res.path_len = path.size() - 1;
         res.path = path;
+//        for (auto & it : path) {
+//            std::cout << it->i << ' ' << it->j << '\n';
+//        }
         return res;
     } else {
         res.is_found = false;

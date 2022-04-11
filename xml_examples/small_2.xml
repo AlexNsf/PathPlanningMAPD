@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <map>
+        <width>14</width>
+        <height>13</height>
+        <initial_coordinates>6 0 6 12</initial_coordinates>
+        <start_coordinates>0 0 0 12</start_coordinates>
+        <finish_coordinates>13 2 13 11</finish_coordinates>
+        <tasks>0 0 0 1 1 0 1 1</tasks>
+        <grid>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 1 1 1 0 0 1 1 0 0 1 0</row>
+            <row>0 0 0 0 0 0 0 0 0 0 0 0 0 0</row>
+        </grid>
+    </map>
+    <algorithm>
+        <objective>avg_distance</objective>
+    </algorithm>
+</root>
