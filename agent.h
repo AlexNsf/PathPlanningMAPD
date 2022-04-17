@@ -10,7 +10,7 @@
 
 class Agent {
 private:
-    Coordinate start_coordinate;
+//    Coordinate start_coordinate;
     std::vector<Coordinate> path_to_start;
     std::vector<Coordinate> path_to_finish;
     int64_t start_time;
@@ -18,6 +18,7 @@ private:
     int num;
 
 public:
+    Coordinate start_coordinate;
     Agent();
 
     Agent(Coordinate initial_position);

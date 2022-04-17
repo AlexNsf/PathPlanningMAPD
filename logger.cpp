@@ -32,8 +32,8 @@ void Logger::set_obstacles(const Map& map) {
 
 void Logger::set_initials(const std::vector<Coordinate> &initials) {
     out_file << "Initial positions:\n";
-    for (int i = 0; i < initials.size() - 1; ++i) {
-        out_file << initials[i].j << ' ' << initials[i].i << ' ' << i << '\n';
+    for (int i = 0; i < initials.size(); ++i) {
+        out_file << initials[i].j << ' ' << initials[i].i << ' ' << i + 1 << " 0 0\n";
     }
 }
 
@@ -54,7 +54,8 @@ void Logger::set_finishes(const std::vector<Coordinate> &finishes) {
 void Logger::update_agents_locations(const std::set<Coordinate, CoordinateComparator>& new_locations) {
     out_file << "New move:\n";
     for (const auto& new_location : new_locations) {
-        out_file << new_location.j << ' ' << new_location.i << ' ' << new_location.num << '\n';
+        out_file << new_location.j << ' ' << new_location.i << ' ' << new_location.num << ' ' <<
+                 new_location.started << ' ' << new_location.finished << '\n';
     }
 }
 

@@ -12,8 +12,7 @@ map_colors = {
     'finish': (0, 0, 255),
 }
 
-cell_size = 40
-cell_border_size = cell_size // 10
+wait_time = 0.5
 
 
 class Coordinate:
@@ -39,8 +38,8 @@ class Logs:
         self.initial_positions: List[Tuple[Coordinate, int]] = []
         self.start_positions: Set[Coordinate] = set()
         self.finish_positions: Set[Coordinate] = set()
-        self.prev_locations: List[Tuple[Coordinate, int]] = []
-        self.cur_locations: List[Tuple[Coordinate, int]] = []
+        self.prev_locations: List[Tuple[Coordinate, int, bool, bool]] = []
+        self.cur_locations: List[Tuple[Coordinate, int, bool, bool]] = []
 
     def read_size(self, height, width):
         self.height, self.width = height, width
@@ -57,8 +56,8 @@ class Logs:
     def read_finish(self, x, y):
         self.finish_positions.add(Coordinate(x, y))
 
-    def read_cur_location(self, x, y, num):
-        self.cur_locations.append((Coordinate(x, y), num))
+    def read_cur_location(self, x, y, num, finished, started):
+        self.cur_locations.append((Coordinate(x, y), num, finished, started))
 
     def move_cur_to_prev(self):
         self.prev_locations = self.cur_locations.copy()
@@ -85,9 +84,17 @@ class Drawer:
         pygame.draw.rect(display, map_colors['finish'], (x * cell_size, y * cell_size, cell_size, cell_size))
 
     @staticmethod
-    def draw_agent(x, y, num):
-        pygame.draw.circle(display, (0, 100, 100 * num),
+    def draw_agent(x, y, num, started, finished):
+        color = (0, 100, 100)
+        if started:
+            color = (125, 38, 205)
+        elif finished:
+            color = (255, 0, 0)
+        pygame.draw.circle(display, color,
                            (x * cell_size + cell_size // 2, y * cell_size + cell_size // 2), cell_size // 2)
+        font = pygame.font.SysFont('arial', cell_size // 3)
+        text = font.render(str(num), True, (0, 0, 0))
+        display.blit(text, (x * cell_size + cell_size // 2, y * cell_size + cell_size // 2))
 
     @staticmethod
     def draw_move():
@@ -99,14 +106,13 @@ class Drawer:
             else:
                 Drawer.draw_background_cell(prev_location[0].x, prev_location[0].y)
         for cur_location in logs_obj.cur_locations:
-            Drawer.draw_agent(cur_location[0].x, cur_location[0].y, cur_location[1])
+            Drawer.draw_agent(cur_location[0].x, cur_location[0].y, cur_location[1], cur_location[2], cur_location[3])
         pygame.display.update()
 
 
-log_file = open('log.txt', 'r')
+log_file = open('logs\\log.txt', 'r')
 logs = list(map(lambda x: x.strip(), log_file.readlines()))
 log_file.close()
-
 
 logs_obj = Logs()
 log_i = 0
@@ -122,7 +128,8 @@ while logs[log_i + 1] != "New move:":
     elif logs[log_i] == "Initial positions:":
         while logs[log_i + 1] != "Start positions:":
             log_i += 1
-            logs_obj.read_init(*map(int, logs[log_i].split()))
+            logs_obj.read_init(*list(map(int, logs[log_i].split()))[:3])
+            # print(*map(int, logs[log_i].split()))
             logs_obj.read_cur_location(*map(int, logs[log_i].split()))
     elif logs[log_i] == "Start positions:":
         while logs[log_i + 1] != "Finish positions:":
@@ -136,9 +143,11 @@ while logs[log_i + 1] != "New move:":
     else:
         log_i += 1
 
+cell_size = 800 // min(logs_obj.height, logs_obj.width)
+cell_border_size = cell_size // 10
+
 pygame.init()
 display = pygame.display.set_mode([logs_obj.width * cell_size, logs_obj.height * cell_size])
-
 
 for i in range(logs_obj.height):
     for j in range(logs_obj.width):
@@ -154,12 +163,9 @@ for c in logs_obj.finish_positions:
     Drawer.draw_finish(c.x, c.y)
 
 for c in logs_obj.initial_positions:
-    Drawer.draw_agent(c[0].x, c[0].y, c[1])
-
+    Drawer.draw_agent(c[0].x, c[0].y, c[1], 0, 0)
 
 pygame.display.update()
-
-time.sleep(0.1)
 
 log_i += 1
 
@@ -179,5 +185,5 @@ while True:
         # for c in logs_obj.cur_locations:
         #     print(c.x, c.y)
         Drawer.draw_move()
-        time.sleep(0.2)
+        time.sleep(wait_time)
         log_i += 1

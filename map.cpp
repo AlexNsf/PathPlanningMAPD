@@ -233,10 +233,10 @@ bool Map::get_map(const char *FileName)
                 std::cout << "Warning! Duplicate '" << CNS_TAG_TASKS << "' encountered." << std::endl;
             }
             else {
-                Task cur_task;
                 size_t task_start;
                 size_t task_finish;
                 while (stream >> task_start >> task_finish) {
+                    Task cur_task;
                     if (task_start < 0 || task_start >= start_locations.size()) {
                         std::cout << "Error! Value of '" << CNS_TAG_TASKS << "' tag start position number should be an integer AND >=0 AND < "
                                   << start_locations.size() << " - amount of start locations." << std::endl;
@@ -249,6 +249,7 @@ bool Map::get_map(const char *FileName)
                     }
                     cur_task.start = start_locations[task_start];
                     cur_task.finish = finish_locations[task_finish];
+                    std::cout << cur_task.num << " NUM\n";
                     tasks.push_back(cur_task);
                 }
                 hasTASKS = true;

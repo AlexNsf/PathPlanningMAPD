@@ -13,7 +13,4 @@
             <row>0 0 0</row>
         </grid>
     </map>
-    <algorithm>
-        <objective>avg_distance</objective>
-    </algorithm>
 </root>
