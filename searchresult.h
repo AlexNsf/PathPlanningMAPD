@@ -6,7 +6,7 @@
 struct SearchResult {
     bool is_failed;
     int64_t service_time; // average number of timesteps needed to finish executing each task after it enters the system
-    int64_t throughput; // tasks executed per 100 timesteps
+    double throughput; // tasks executed per 100 timesteps
     int64_t makespan; // timestep when all tasks are finished
     double run_time_per_timestep;
     double total_time;

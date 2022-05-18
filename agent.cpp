@@ -15,21 +15,31 @@ Agent::Agent(Coordinate initial_position) {
     num = ++agent_counter;
 }
 
-bool Agent::update_path(const Map& map, const Task& task, Token& token) {
-    std::cout << start_coordinate.i << ' ' << start_coordinate.j << " START\n";
+bool Agent::update_path(const Map& map, const Task& task, Token& token, bool real_task) {
+//    std::cout << start_coordinate.i << ' ' << start_coordinate.j << " START\n";
     start_time = token.get_cur_ts();
     path_to_start.clear();
+    if (task.start == task.finish) {
+//        std::cout << start_coordinate.i << ' ' << start_coordinate.j << " FINISH\n";
+        start_coordinate.prev_i = start_coordinate.i;
+        start_coordinate.prev_j = start_coordinate.j;
+        start_coordinate.num = this->num;
+        token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
+        finish_time = start_time + 1;
+        return true;
+    }
     AStar search_to_start;
     Task task_to_start(start_coordinate, task.start);
-    std::cout << task_to_start.start.i << ' ' << task_to_start.start.j << ' ' << task_to_start.finish.i << ' ' << task_to_start.finish.j << '\n';
+//    std::cout << task_to_start.start.i << ' ' << task_to_start.start.j << ' ' << task_to_start.finish.i << ' ' << task_to_start.finish.j << "\n";
     auto search_res_to_start = search_to_start.find_path(map, task_to_start, token, start_time);
     if (!search_res_to_start.is_found) {
-//        std::cout << "ASDSADAKSJGDKASHDGKJASD\n";
         start_coordinate.prev_i = start_coordinate.i;
         start_coordinate.prev_j = start_coordinate.j;
         start_coordinate.num = this->num;
         token.add_blocked_cell_at_ts(start_coordinate, start_time);
         token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
+        token.add_blocked_endpoint(start_coordinate, start_time);
+        token.add_blocked_endpoint(start_coordinate, start_time + 1);
         finish_time = start_time + 1;
         return false;
     }
@@ -49,6 +59,8 @@ bool Agent::update_path(const Map& map, const Task& task, Token& token) {
         start_coordinate.num = this->num;
         token.add_blocked_cell_at_ts(start_coordinate, start_time);
         token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
+        token.add_blocked_endpoint(start_coordinate, start_time);
+        token.add_blocked_endpoint(start_coordinate, start_time + 1);
         finish_time = start_time + 1;
         return false;
     }
@@ -67,25 +79,48 @@ bool Agent::update_path(const Map& map, const Task& task, Token& token) {
             path_to_start[i].prev_j = path_to_start[i - 1].j;
         }
         path_to_start[i].num = this->num;
+        if (token.get_locations_at_ts(start_time + i).find(path_to_start[i]) !=
+        token.get_locations_at_ts(start_time + i).end()) {
+        }
         token.add_blocked_cell_at_ts(path_to_start[i], start_time + i);
+        start_coordinate.num = this->num;
         token.add_blocked_endpoint(start_coordinate, start_time + i); // занятый финиш
+        Coordinate fin = task.finish;
+        fin.num = this->num;
+        token.add_blocked_endpoint(fin, start_time + i);
+        if (real_task) {
+            token.doing_task_at_ts.insert(start_time + i);
+        }
     }
     for (int i = 0; i < path_to_finish.size(); ++i) {
         if (i == 0) {
             path_to_finish[i].prev_i = path_to_start[path_to_start.size() - 2].i;
             path_to_finish[i].prev_j = path_to_start[path_to_start.size() - 2].j;
-            path_to_finish[i].started = true;
-//            std::cout << "ASDSDADADAd\n";
+            if (real_task) {
+                path_to_finish[i].started = true;
+            }
         } else {
             path_to_finish[i].prev_i = path_to_finish[i - 1].i;
             path_to_finish[i].prev_j = path_to_finish[i - 1].j;
         }
         if (i == path_to_finish.size() - 1) {
-            path_to_finish[i].finished = true;
+            if (real_task) {
+                path_to_finish[i].finished = true;
+            }
         }
         path_to_finish[i].num = this->num;
+        if (token.get_locations_at_ts(start_time + search_res_to_start.path_len + i).find(path_to_finish[i]) !=
+        token.get_locations_at_ts(start_time + search_res_to_start.path_len + i).end()) {
+        }
         token.add_blocked_cell_at_ts(path_to_finish[i], start_time + search_res_to_start.path_len + i);
-        token.add_blocked_endpoint(task.finish, start_time + search_res_to_start.path_len + i); // занятый финиш
+        start_coordinate.num = this->num;
+        token.add_blocked_endpoint(start_coordinate, start_time + search_res_to_start.path_len + i);
+        Coordinate fin = task.finish;
+        fin.num = this->num;
+        token.add_blocked_endpoint(fin, start_time + search_res_to_start.path_len + i); // занятый финиш
+        if (real_task) {
+            token.doing_task_at_ts.insert(start_time + search_res_to_start.path_len + i);
+        }
     }
     start_coordinate = task.finish;
     finish_time = start_time + path_to_start.size() + path_to_finish.size() - 2;

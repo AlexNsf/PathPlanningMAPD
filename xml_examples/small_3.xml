@@ -4,15 +4,15 @@
         <width>5</width>
         <height>5</height>
         <initial_coordinates>2 0 3 0</initial_coordinates>
-        <start_coordinates>0 0 1 2</start_coordinates>
-        <finish_coordinates>4 0 2 0</finish_coordinates>
-        <tasks>0 0 0 1 1 0 1 1</tasks>
+        <start_coordinates>0 0</start_coordinates>
+        <finish_coordinates>4 4</finish_coordinates>
+        <tasks>0 0 0 0 0 0 0 0 0 0</tasks>
         <grid>
             <row>0 1 0 0 0</row>
             <row>0 1 0 0 1</row>
-            <row>0 0 0 1 1</row>
-            <row>0 0 0 1 1</row>
-            <row>0 0 0 1 1</row>
+            <row>0 0 0 0 1</row>
+            <row>0 0 0 0 0</row>
+            <row>0 0 0 1 0</row>
         </grid>
     </map>
 </root>

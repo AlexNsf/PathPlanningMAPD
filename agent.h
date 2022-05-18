@@ -15,15 +15,16 @@ private:
     std::vector<Coordinate> path_to_finish;
     int64_t start_time;
     int64_t finish_time;
-    int num;
+//    int num;
 
 public:
+    int num;
     Coordinate start_coordinate;
     Agent();
 
     Agent(Coordinate initial_position);
 
-    bool update_path(const Map& map, const Task& task, Token& token);
+    bool update_path(const Map& map, const Task& task, Token& token, bool real_task);
 
     int64_t get_finish_time() const;
 };

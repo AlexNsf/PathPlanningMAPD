@@ -10,7 +10,7 @@ bool Token::is_any_blocked_at_ts(int64_t timestep) const {
     return (blocked_cells_per_ts.find(timestep) != blocked_cells_per_ts.end());
 }
 
-const std::set<Coordinate, CoordinateComparator>& Token::get_locations_at_ts(int64_t timestep) {
+const std::unordered_set<Coordinate>& Token::get_locations_at_ts(int64_t timestep) {
     return blocked_cells_per_ts[timestep];
 }
 
@@ -43,15 +43,6 @@ bool Token::is_any_tasks_left() {
     return !tasks.empty();
 }
 
-//Task Token::pop_task() {
-//    if (!this->is_any_tasks_left()) {
-//        throw std::runtime_error("No tasks left");
-//    }
-//    Task task = tasks.front();
-//    tasks.erase(tasks.begin());
-//    return task;
-//}
-
 void Token::add_blocked_endpoint(Coordinate blocked_endpoint, int64_t timestep) {
     blocked_endpoints_per_ts[timestep].insert(blocked_endpoint);
 }
@@ -60,10 +51,10 @@ bool Token::is_any_blocked_endpoints_at_ts(int64_t timestep) const {
     return (blocked_endpoints_per_ts.find(timestep) != blocked_endpoints_per_ts.end());
 }
 
-const std::set<Coordinate, CoordinateComparator> &Token::get_blocked_endpoints_at_ts(int64_t timestep) {
+const std::unordered_set<Coordinate> &Token::get_blocked_endpoints_at_ts(int64_t timestep) {
     return blocked_endpoints_per_ts[timestep];
 }
 
-std::set<Task, TaskComparator>& Token::get_tasks() {
+std::unordered_set<Task>& Token::get_tasks() {
     return tasks;
 }

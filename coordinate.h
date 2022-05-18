@@ -35,4 +35,18 @@ struct CoordinateComparator {
     }
 };
 
+namespace std {
+    template<>
+    struct hash<Coordinate> {
+        std::size_t operator()(const Coordinate& k) const {
+            using std::size_t;
+            using std::hash;
+            using std::string;
+
+            return (hash<int>()(k.i)
+                    ^ (hash<int>()(k.j)));
+        }
+    };
+}
+
 #endif //PATHPLANNINGMAPD_COORDINATE_H

@@ -33,4 +33,24 @@ struct TaskComparator {
     }
 };
 
+namespace std {
+
+    template <>
+    struct hash<Task>
+    {
+        std::size_t operator()(const Task& k) const
+        {
+            using std::size_t;
+            using std::hash;
+            using std::string;
+
+            return (((hash<int>()(k.start.i)
+                     ^ (hash<int>()(k.start.j) << 1)) >> 1)
+                   ^ (hash<int>()(k.finish.i) << 1) >> 1)
+                   ^ (hash<int>()(k.finish.j) << 1);
+        }
+    };
+
+}
+
 #endif //PATHPLANNINGMAPD_TASK_H

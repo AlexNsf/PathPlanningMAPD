@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <vector>
-#include <set>
+#include <unordered_set>
 #include "coordinate.h"
 #include "map.h"
 
@@ -30,7 +30,7 @@ public:
 
     void set_finishes(const std::vector<Coordinate>& starts);
 
-    void update_agents_locations(const std::set<Coordinate, CoordinateComparator>& new_locations);
+    void update_agents_locations(const std::unordered_set<Coordinate>& new_locations);
 
     void save_map(const Map& map);
 

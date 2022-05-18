@@ -14,7 +14,6 @@ std::vector<Node*> AStar::get_neighbours(const Map& map, const Task& task, Token
     std::vector<Node*> neighbours;
     for (int i = -1; i <= 1; ++i) {
         for (int j = -1; j <= 1; ++j) {
-//            if (!(abs(i) + abs(j) == 1 || (i == 0 && j == 0))) { // возможность стоять на месте (нужно поправить)
             if (abs(i) + abs(j) != 1) {
                 continue;
             }
@@ -42,7 +41,6 @@ std::vector<Node*> AStar::get_neighbours(const Map& map, const Task& task, Token
             }
             Node* cur_node = new Node(cur_i, cur_j);
             cur_node->g = node->g + sqrt(i * i + j * j);
-//            cur_node->H = 0;
             cur_node->H = token.get_precalculated_h(cur_i, cur_j, task.finish.i, task.finish.j);
             cur_node->F = cur_node->g + cur_node->H;
             cur_node->prev = node;
@@ -54,11 +52,8 @@ std::vector<Node*> AStar::get_neighbours(const Map& map, const Task& task, Token
 }
 
 AStarResult AStar::find_path(const Map& map, const Task& task, Token& token, int64_t start_ts) {
-//    std::cout << task.start.i << ' ' << task.start.j << " NEW TASK\n";
-//    std::cout << task.finish.i << ' ' << task.finish.j << " FIN\n";
     Node* start = new Node(task.start.i, task.start.j);
     start->g = 0;
-//    start->H = 0;
     start->H = token.get_precalculated_h(start->i, start->j, task.finish.i, task.finish.j);
     start->F = start->H;
     start->ts_opened = start_ts;
@@ -67,11 +62,6 @@ AStarResult AStar::find_path(const Map& map, const Task& task, Token& token, int
     to_del = {start};
     Node* goal = nullptr;
     while (true) {
-//        std::cout << "OPEN\n";
-//        for (auto c : OPEN) {
-//            std::cout << c->i << ' ' << c->j << '\n';
-//        }
-//        std::cout << '\n';
         if (OPEN.empty()) {
             break; // провал
         }
@@ -115,9 +105,6 @@ AStarResult AStar::find_path(const Map& map, const Task& task, Token& token, int
         res.is_found = true;
         res.path_len = path.size() - 1;
         res.path = path;
-//        for (auto & it : path) {
-//            std::cout << it->i << ' ' << it->j << '\n';
-//        }
         return res;
     } else {
         res.is_found = false;
