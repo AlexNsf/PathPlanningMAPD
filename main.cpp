@@ -1,9 +1,9 @@
 #include <iostream>
-#include "map.h"
-#include "searchresult.h"
-#include "precalculations.h"
-#include "logger.h"
-#include "agent.h"
+#include "Src/map.h"
+#include "Src/searchresult.h"
+#include "Src/precalculations.h"
+#include "Src/logger.h"
+#include "Src/agent.h"
 #include <chrono>
 
 int main(int argc, char* argv[]) {
