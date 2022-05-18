@@ -110,7 +110,6 @@ int main(int argc, char* argv[]) {
                 }
             }
         logger.update_agents_locations(token.get_locations_at_ts(cur_ts));
-        std::cout << (token.doing_task_at_ts.find(cur_ts) == token.doing_task_at_ts.end()) << ' ' << token.is_any_tasks_left() << " ASDASDASDASDASD\n";
         for (const auto& task : token.get_tasks()) {
             std::cout << task.start.i << ' ' << task.start.j << ' ' << task.finish.i << ' ' << task.finish.j << " TASK\n";
         }
