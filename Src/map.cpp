@@ -321,15 +321,15 @@ bool Map::get_map(const char *FileName)
 
     for (const auto& start : start_locations) {
         if (Grid[start.i][start.j]) {
-            std::cout << "Error! Initial cell is not traversable (cell's value is" << Grid[start.i][start.j] << ")!"
+            std::cout << "Error! Start cell is not traversable (cell's value is" << Grid[start.i][start.j] << ")!"
                       << std::endl;
             return false;
         }
     }
 
-    for (const auto& finish : initial_locations) {
+    for (const auto& finish : finish_locations) {
         if (Grid[finish.i][finish.j]) {
-            std::cout << "Error! Initial cell is not traversable (cell's value is" << Grid[finish.i][finish.j] << ")!"
+            std::cout << "Error! Finish cell is not traversable (cell's value is" << Grid[finish.i][finish.j] << ")!"
                       << std::endl;
             return false;
         }

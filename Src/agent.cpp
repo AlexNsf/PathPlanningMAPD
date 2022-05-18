@@ -17,13 +17,13 @@ Agent::Agent(Coordinate initial_position) {
 
 bool Agent::update_path(const Map& map, const Task& task, Token& token, bool real_task) {
 //    std::cout << start_coordinate.i << ' ' << start_coordinate.j << " START\n";
+    start_coordinate.num = this->num;
     start_time = token.get_cur_ts();
     path_to_start.clear();
     if (task.start == task.finish) {
 //        std::cout << start_coordinate.i << ' ' << start_coordinate.j << " FINISH\n";
         start_coordinate.prev_i = start_coordinate.i;
         start_coordinate.prev_j = start_coordinate.j;
-        start_coordinate.num = this->num;
         token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
         finish_time = start_time + 1;
         return true;
@@ -35,7 +35,6 @@ bool Agent::update_path(const Map& map, const Task& task, Token& token, bool rea
     if (!search_res_to_start.is_found) {
         start_coordinate.prev_i = start_coordinate.i;
         start_coordinate.prev_j = start_coordinate.j;
-        start_coordinate.num = this->num;
         token.add_blocked_cell_at_ts(start_coordinate, start_time);
         token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
         token.add_blocked_endpoint(start_coordinate, start_time);
@@ -56,7 +55,6 @@ bool Agent::update_path(const Map& map, const Task& task, Token& token, bool rea
     if (!search_res_to_finish.is_found) {
         start_coordinate.prev_i = start_coordinate.i;
         start_coordinate.prev_j = start_coordinate.j;
-        start_coordinate.num = this->num;
         token.add_blocked_cell_at_ts(start_coordinate, start_time);
         token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
         token.add_blocked_endpoint(start_coordinate, start_time);
@@ -83,8 +81,8 @@ bool Agent::update_path(const Map& map, const Task& task, Token& token, bool rea
         token.get_locations_at_ts(start_time + i).end()) {
         }
         token.add_blocked_cell_at_ts(path_to_start[i], start_time + i);
-        start_coordinate.num = this->num;
-        token.add_blocked_endpoint(start_coordinate, start_time + i); // занятый финиш
+//        start_coordinate.num = this->num;
+//        token.add_blocked_endpoint(start_coordinate, start_time + i); // занятый финиш
         Coordinate fin = task.finish;
         fin.num = this->num;
         token.add_blocked_endpoint(fin, start_time + i);
@@ -113,8 +111,8 @@ bool Agent::update_path(const Map& map, const Task& task, Token& token, bool rea
         token.get_locations_at_ts(start_time + search_res_to_start.path_len + i).end()) {
         }
         token.add_blocked_cell_at_ts(path_to_finish[i], start_time + search_res_to_start.path_len + i);
-        start_coordinate.num = this->num;
-        token.add_blocked_endpoint(start_coordinate, start_time + search_res_to_start.path_len + i);
+//        start_coordinate.num = this->num;
+//        token.add_blocked_endpoint(start_coordinate, start_time + search_res_to_start.path_len + i);
         Coordinate fin = task.finish;
         fin.num = this->num;
         token.add_blocked_endpoint(fin, start_time + search_res_to_start.path_len + i); // занятый финиш

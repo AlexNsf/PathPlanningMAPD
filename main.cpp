@@ -97,12 +97,38 @@ int main(int argc, char* argv[]) {
                                 }
                             }
                         }
-                        agents[i].update_path(map, cur_task, token, false);
+                        if (!agents[i].update_path(map, cur_task, token, false)) {
+                            search_result.is_failed = true;
+                            break;
+                        }
                     } else {
                         token.get_tasks().erase(cur_task);
                         if (!agents[i].update_path(map, cur_task, token, true)) {
                             token.add_task(cur_task);
-                            search_result.is_failed = true;
+                            task_set = false;
+                            if (token.get_locations_at_ts(cur_ts + 1).find(agents[i].start_coordinate) == token.get_locations_at_ts(cur_ts + 1).end()) {
+                                cur_task = Task(agents[i].start_coordinate, agents[i].start_coordinate);
+                                agents[i].update_path(map, cur_task, token, false);
+                                continue;
+                            }
+                            for (const Coordinate& coordinate : endpoints) {
+                                if ((token.get_blocked_endpoints_at_ts(cur_ts).find(coordinate) == token.get_blocked_endpoints_at_ts(cur_ts).end() ||
+                                     token.get_blocked_endpoints_at_ts(cur_ts).find(coordinate)->num == agents[i].num) && agents[i].start_coordinate != coordinate) {
+                                    if (task_set) {
+                                        if (token.get_precalculated_h(agents[i].start_coordinate.i, agents[i].start_coordinate.j, coordinate.i, coordinate.j) <
+                                            token.get_precalculated_h(agents[i].start_coordinate.i, agents[i].start_coordinate.j, cur_task.start.i, cur_task.start.j)) {
+                                            cur_task = Task(agents[i].start_coordinate, coordinate);
+                                        }
+                                    } else {
+                                        task_set = true;
+                                        cur_task = Task(agents[i].start_coordinate, coordinate);
+                                    }
+                                }
+                            }
+                            if (!agents[i].update_path(map, cur_task, token, false)) {
+                                search_result.is_failed = true;
+                                break;
+                            }
                         } else {
                             ++search_result.tasks_finished;
                         }
@@ -114,6 +140,9 @@ int main(int argc, char* argv[]) {
             std::cout << task.start.i << ' ' << task.start.j << ' ' << task.finish.i << ' ' << task.finish.j << " TASK\n";
         }
         if (token.doing_task_at_ts.find(cur_ts) == token.doing_task_at_ts.end() && !token.is_any_tasks_left()) {
+            break;
+        }
+        if (search_result.is_failed) {
             break;
         }
         token.update_cur_ts();
