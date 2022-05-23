@@ -29,7 +29,7 @@ private:
     std::unordered_map<int64_t, std::unordered_set<Coordinate>> blocked_cells_per_ts; // for each timestep set of blocked coordinates (where agents locate)
     std::unordered_set<Task> tasks;
     // нужно поменять set на unordered_set
-    std::unordered_map<std::pair<int, int>, std::unordered_map<std::pair<int, int>, double>> precalculated_hs;
+//    std::unordered_map<std::pair<int, int>, std::unordered_map<std::pair<int, int>, double>> precalculated_hs;
     // неплохо бы поменять на unordered_map оба map
     std::unordered_map<int64_t, std::unordered_set<Coordinate>> blocked_endpoints_per_ts;
 
@@ -37,7 +37,7 @@ public:
     Token();
 //    std::unordered_map<int64_t, std::set<Coordinate, CoordinateComparator>> blocked_endpoints_per_ts;
 //    std::unordered_map<int64_t, std::set<Coordinate, CoordinateComparator>> blocked_cells_per_ts;
-//    std::map<std::pair<int, int>, std::map<std::pair<int, int>, double>> precalculated_hs;
+    std::map<std::pair<int, int>, std::map<std::pair<int, int>, double>> precalculated_hs;
 
     std::unordered_set<int64_t> doing_task_at_ts;
 

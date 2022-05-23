@@ -10,9 +10,10 @@ map_colors = {
     'agent': (0, 255, 0),
     'start': (255, 255, 0),
     'finish': (0, 0, 255),
+    'initial': (0, 255, 255),
 }
 
-wait_time = 0.5
+wait_time = 0.1
 
 
 class Coordinate:
@@ -38,6 +39,7 @@ class Logs:
         self.initial_positions: List[Tuple[Coordinate, int]] = []
         self.start_positions: Set[Coordinate] = set()
         self.finish_positions: Set[Coordinate] = set()
+        self.initial_positions_no_num: Set[Coordinate] = set()
         self.prev_locations: List[Tuple[Coordinate, int, bool, bool]] = []
         self.cur_locations: List[Tuple[Coordinate, int, bool, bool]] = []
 
@@ -49,6 +51,7 @@ class Logs:
 
     def read_init(self, x, y, num):
         self.initial_positions.append((Coordinate(x, y), num))
+        self.initial_positions_no_num.add(Coordinate(x, y))
 
     def read_start(self, x, y):
         self.start_positions.add(Coordinate(x, y))
@@ -84,6 +87,10 @@ class Drawer:
         pygame.draw.rect(display, map_colors['finish'], (x * cell_size, y * cell_size, cell_size, cell_size))
 
     @staticmethod
+    def draw_initial(x, y):
+        pygame.draw.rect(display, map_colors['initial'], (x * cell_size, y * cell_size, cell_size, cell_size))
+
+    @staticmethod
     def draw_agent(x, y, num, started, finished):
         color = (0, 100, 100)
         if started:
@@ -103,6 +110,8 @@ class Drawer:
                 Drawer.draw_start(prev_location[0].x, prev_location[0].y)
             elif prev_location[0] in logs_obj.finish_positions:
                 Drawer.draw_finish(prev_location[0].x, prev_location[0].y)
+            elif prev_location[0] in logs_obj.initial_positions_no_num:
+                Drawer.draw_initial(prev_location[0].x, prev_location[0].y)
             else:
                 Drawer.draw_background_cell(prev_location[0].x, prev_location[0].y)
         for cur_location in logs_obj.cur_locations:
@@ -155,6 +164,9 @@ for i in range(logs_obj.height):
 
 for c in logs_obj.obstacles:
     Drawer.draw_obstacle(c.x, c.y)
+
+for c in logs_obj.initial_positions_no_num:
+    Drawer.draw_initial(c.x, c.y)
 
 for c in logs_obj.start_positions:
     Drawer.draw_start(c.x, c.y)

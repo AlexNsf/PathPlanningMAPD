@@ -8,7 +8,10 @@ void find_path_len_to_all_endpoints(const Map& map, Token& token) {
     for (auto finish : map.get_finish_locations()) {
         endpoints.push_back(finish);
     }
-    std::vector<std::vector<double>> precalculated_hs(map.getMapHeight(), std::vector<double>(map.getMapWidth(), 0));
+    for (auto initial : map.get_initial_locations()) {
+        endpoints.push_back(initial);
+    }
+//    std::vector<std::vector<double>> precalculated_hs(map.getMapHeight(), std::vector<double>(map.getMapWidth(), 0));
     for (int i = 0; i < map.getMapHeight(); ++i) {
         for (int j = 0; j < map.getMapWidth(); ++j) {
             if (map.CellIsTraversable(i, j)) {

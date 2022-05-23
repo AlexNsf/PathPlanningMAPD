@@ -24,6 +24,13 @@ int main(int argc, char* argv[]) {
 
     Token token;
     find_path_len_to_all_endpoints(map, token);
+//
+//    for (auto i = 0; i < map.getMapHeight(); ++i) {
+//        for (auto j = 0; j < map.getMapWidth(); ++j) {
+//            std::cout << token.precalculated_hs[{0, 3}][{i, j}] << ' ';
+//        }
+//        std::cout << '\n';
+//    }
 
     SearchResult search_result;
 
@@ -40,12 +47,15 @@ int main(int argc, char* argv[]) {
 
     std::vector<Coordinate> endpoints;
 
+    std::unordered_set<Coordinate> delivery_locations;
+
     for (const auto& coordinate : map.get_start_locations()) {
         endpoints.push_back(coordinate);
     }
 
     for (const auto& coordinate : map.get_finish_locations()) {
-        endpoints.push_back(coordinate);
+//        endpoints.push_back(coordinate);
+        delivery_locations.insert(coordinate);
     }
 
     for (const auto& coordinate : map.get_initial_locations()) {
@@ -78,7 +88,8 @@ int main(int argc, char* argv[]) {
                         }
                     }
                     if (!task_set) {
-                        if (token.get_locations_at_ts(cur_ts + 1).find(agents[i].start_coordinate) == token.get_locations_at_ts(cur_ts + 1).end()) {
+                        if (delivery_locations.find(agents[i].start_coordinate) == delivery_locations.end() &&
+                                token.get_locations_at_ts(cur_ts + 1).find(agents[i].start_coordinate) == token.get_locations_at_ts(cur_ts + 1).end()) {
                             cur_task = Task(agents[i].start_coordinate, agents[i].start_coordinate);
                             agents[i].update_path(map, cur_task, token, false);
                             continue;
@@ -88,7 +99,7 @@ int main(int argc, char* argv[]) {
                             token.get_blocked_endpoints_at_ts(cur_ts).find(coordinate)->num == agents[i].num) && agents[i].start_coordinate != coordinate) {
                                 if (task_set) {
                                     if (token.get_precalculated_h(agents[i].start_coordinate.i, agents[i].start_coordinate.j, coordinate.i, coordinate.j) <
-                                        token.get_precalculated_h(agents[i].start_coordinate.i, agents[i].start_coordinate.j, cur_task.start.i, cur_task.start.j)) {
+                                        token.get_precalculated_h(agents[i].start_coordinate.i, agents[i].start_coordinate.j, cur_task.finish.i, cur_task.finish.j)) {
                                         cur_task = Task(agents[i].start_coordinate, coordinate);
                                     }
                                 } else {
@@ -116,7 +127,7 @@ int main(int argc, char* argv[]) {
                                      token.get_blocked_endpoints_at_ts(cur_ts).find(coordinate)->num == agents[i].num) && agents[i].start_coordinate != coordinate) {
                                     if (task_set) {
                                         if (token.get_precalculated_h(agents[i].start_coordinate.i, agents[i].start_coordinate.j, coordinate.i, coordinate.j) <
-                                            token.get_precalculated_h(agents[i].start_coordinate.i, agents[i].start_coordinate.j, cur_task.start.i, cur_task.start.j)) {
+                                            token.get_precalculated_h(agents[i].start_coordinate.i, agents[i].start_coordinate.j, cur_task.finish.i, cur_task.finish.j)) {
                                             cur_task = Task(agents[i].start_coordinate, coordinate);
                                         }
                                     } else {
@@ -135,7 +146,6 @@ int main(int argc, char* argv[]) {
                     }
                 }
             }
-        logger.update_agents_locations(token.get_locations_at_ts(cur_ts));
         for (const auto& task : token.get_tasks()) {
             std::cout << task.start.i << ' ' << task.start.j << ' ' << task.finish.i << ' ' << task.finish.j << " TASK\n";
         }
@@ -145,6 +155,7 @@ int main(int argc, char* argv[]) {
         if (search_result.is_failed) {
             break;
         }
+        logger.update_agents_locations(token.get_locations_at_ts(cur_ts));
         token.update_cur_ts();
         ++cur_ts;
     }
@@ -161,7 +172,7 @@ int main(int argc, char* argv[]) {
 
     std::ofstream out_file;
     out_file.open("..\\result.txt", std::ios::out | std::ios::trunc);
-    out_file << "Is failed once " << search_result.is_failed << '\n';
+    out_file << "Is_failed_once " << search_result.is_failed << '\n';
     out_file << "Service_time " << search_result.service_time << '\n';
     out_file << "Throughput " << search_result.throughput << '\n';
     out_file << "Makespan " << search_result.makespan << '\n';

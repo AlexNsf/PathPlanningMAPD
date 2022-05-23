@@ -25,6 +25,7 @@ bool Agent::update_path(const Map& map, const Task& task, Token& token, bool rea
         start_coordinate.prev_i = start_coordinate.i;
         start_coordinate.prev_j = start_coordinate.j;
         token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
+        token.add_blocked_endpoint(start_coordinate, start_time + 1);
         finish_time = start_time + 1;
         return true;
     }
@@ -33,13 +34,14 @@ bool Agent::update_path(const Map& map, const Task& task, Token& token, bool rea
 //    std::cout << task_to_start.start.i << ' ' << task_to_start.start.j << ' ' << task_to_start.finish.i << ' ' << task_to_start.finish.j << "\n";
     auto search_res_to_start = search_to_start.find_path(map, task_to_start, token, start_time);
     if (!search_res_to_start.is_found) {
-        start_coordinate.prev_i = start_coordinate.i;
-        start_coordinate.prev_j = start_coordinate.j;
-        token.add_blocked_cell_at_ts(start_coordinate, start_time);
-        token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
-        token.add_blocked_endpoint(start_coordinate, start_time);
-        token.add_blocked_endpoint(start_coordinate, start_time + 1);
-        finish_time = start_time + 1;
+//        start_coordinate.prev_i = start_coordinate.i;
+//        start_coordinate.prev_j = start_coordinate.j;
+//        token.add_blocked_cell_at_ts(start_coordinate, start_time);
+//        token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
+//        token.add_blocked_endpoint(start_coordinate, start_time);
+//        token.add_blocked_endpoint(start_coordinate, start_time + 1);
+//        finish_time = start_time + 1;
+        std::cout << task_to_start.start.i << ' ' << task_to_start.start.j << ' ' << task_to_start.finish.i << ' ' << task_to_start.finish.j << " FAILED TO START\n";
         return false;
     }
 
@@ -53,13 +55,14 @@ bool Agent::update_path(const Map& map, const Task& task, Token& token, bool rea
     AStar search_to_finish;
     auto search_res_to_finish = search_to_finish.find_path(map, task, token, start_time + search_res_to_start.path_len);
     if (!search_res_to_finish.is_found) {
-        start_coordinate.prev_i = start_coordinate.i;
-        start_coordinate.prev_j = start_coordinate.j;
-        token.add_blocked_cell_at_ts(start_coordinate, start_time);
-        token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
-        token.add_blocked_endpoint(start_coordinate, start_time);
-        token.add_blocked_endpoint(start_coordinate, start_time + 1);
-        finish_time = start_time + 1;
+//        start_coordinate.prev_i = start_coordinate.i;
+//        start_coordinate.prev_j = start_coordinate.j;
+//        token.add_blocked_cell_at_ts(start_coordinate, start_time);
+//        token.add_blocked_cell_at_ts(start_coordinate, start_time + 1);
+//        token.add_blocked_endpoint(start_coordinate, start_time);
+//        token.add_blocked_endpoint(start_coordinate, start_time + 1);
+//        finish_time = start_time + 1;
+        std::cout << task.start.i << ' ' << task.start.j << ' ' << task.finish.i << ' ' << task.finish.j << " FAILED TO FINISH\n";
         return false;
     }
     std::cout << "PATH TO FINISH\n";

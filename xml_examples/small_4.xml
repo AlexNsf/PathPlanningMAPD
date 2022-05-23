@@ -3,9 +3,9 @@
     <map>
         <width>5</width>
         <height>5</height>
-        <initial_coordinates>0 0 0 1</initial_coordinates>
+        <initial_coordinates>2 0 2 1</initial_coordinates>
         <start_coordinates>0 0 0 1</start_coordinates>
-        <finish_coordinates>0 0 0 1</finish_coordinates>
+        <finish_coordinates>0 4 1 4</finish_coordinates>
         <tasks>0 1 1 0</tasks>
         <grid>
             <row>0 1 0 0 0</row>

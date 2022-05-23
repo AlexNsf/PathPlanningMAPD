@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <vector>
 #include <cmath>
-#include <map>
+#include <unordered_map>
 #include <set>
 #include <list>
 
@@ -23,8 +23,8 @@ struct AStarResult {
 class AStar {
 private:
     std::set<Node*, NodeComparator> OPEN;
-    std::map<std::pair<int, int>, Node*> CLOSE;
-    std::map<std::pair<int, int>, Node*> visited_nodes;
+    std::unordered_map<std::pair<int, int>, Node*> CLOSE;
+    std::unordered_map<std::pair<int, int>, Node*> visited_nodes;
     std::vector<Node*> to_del;
     // попробовать поменять map на unordered_map
 
