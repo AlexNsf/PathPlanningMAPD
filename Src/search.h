@@ -3,11 +3,14 @@
 
 #include "searchresult.h"
 #include "map.h"
+#include "logger.h"
+#include "token.h"
+#include "chrono"
+#include "agent.h"
 
 class Search {
-private:
-    Map map;
-    SearchResult search_result;
+public:
+    void DoSearch(const Map& map, Token& token, SearchResult searchResult, Logger& logger);
 };
 
 #endif //PATHPLANNINGMAPD_SEARCH_H
